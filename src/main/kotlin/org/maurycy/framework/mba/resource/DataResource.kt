@@ -42,6 +42,7 @@ class DataResource(
     fun addData(aData: DataDto): Uni<DataDto> {
         try {
             return dataRepository.persist(aData)
+// TODO: think about removing catching from this function move it to exception mapper?
         }catch (aE: MongoWriteException){
             throw FailedToPersistDataException()
         }
