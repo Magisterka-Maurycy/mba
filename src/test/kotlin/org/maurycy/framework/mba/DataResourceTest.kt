@@ -26,7 +26,7 @@ class DataResourceTest {
 
     @Test
     @TestTransaction
-    @TestSecurity(user = "testUser", roles = ["admin","user"])
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun getAllTest() {
         RestAssured.given()
             .`when`().get()
@@ -37,7 +37,7 @@ class DataResourceTest {
 
     @Test
     @TestTransaction
-    @TestSecurity(user = "testUser", roles = ["admin","user"])
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun getByIdFailedToBuildObjectIdTest() {
         RestAssured.given()
             .`when`()
@@ -48,7 +48,7 @@ class DataResourceTest {
 
     @Test
     @TestTransaction
-    @TestSecurity(user = "testUser", roles = ["admin","user"])
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun getByIdFailedToFindObjectIdTest() {
         val id = faker.name().name()
         RestAssured.given()
@@ -61,12 +61,12 @@ class DataResourceTest {
 
     @Test
     @TestTransaction
-    @TestSecurity(user = "testUser", roles = ["admin","user"])
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun addDataTest() {
         val id = faker.name().name()
         val body = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, map1))
+            .body(DataInput(id, "typeDef", map1))
             .`when`().post()
             .then()
             .statusCode(201)
@@ -88,12 +88,12 @@ class DataResourceTest {
 
     @Test
     @TestTransaction
-    @TestSecurity(user = "testUser", roles = ["admin","user"])
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun deleteDataTest() {
         val id = faker.name().name()
         val body = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, map1))
+            .body(DataInput(id, "typeDef", map1))
             .`when`().post()
             .then()
             .statusCode(201)
@@ -114,12 +114,12 @@ class DataResourceTest {
 
     @Test
     @TestTransaction
-    @TestSecurity(user = "testUser", roles = ["admin","user"])
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun putDataTest() {
         val id = faker.name().name()
         val body = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, map1))
+            .body(DataInput(id, "typeDef", map1))
             .`when`().post()
             .then()
             .statusCode(201)
@@ -130,7 +130,7 @@ class DataResourceTest {
 
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, map2))
+            .body(DataInput(id, "typeDef", map2))
             .`when`()
             .put("/${body.id}")
             .then()
@@ -143,12 +143,12 @@ class DataResourceTest {
 
     @Test
     @TestTransaction
-    @TestSecurity(user = "testUser", roles = ["admin","user"])
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun putDataFailedToBuildObjectIdTest() {
         val id = faker.name().name()
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, map2))
+            .body(DataInput(id, "typeDef", map2))
             .`when`()
             .put("/aaa")
             .then()
@@ -157,16 +157,43 @@ class DataResourceTest {
 
     @Test
     @TestTransaction
-    @TestSecurity(user = "testUser", roles = ["admin","user"])
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun putDataFailedToFindObjectIdTest() {
         val id = faker.name().name()
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, map2))
+            .body(DataInput(id, "typeDef", map2))
             .`when`()
             .put("/$id")
             .then()
             .statusCode(204)
             .body(CoreMatchers.`is`(""))
+    }
+
+    @Test
+    @TestTransaction
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
+    fun getByTypeTest() {
+        val id = faker.name().name()
+        val body = RestAssured.given()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(DataInput(id, "typeDef", map1))
+            .`when`().post()
+            .then()
+            .statusCode(201)
+            .body(
+                CoreMatchers.containsString("id"),
+                CoreMatchers.containsString(map1String)
+            ).extract().body().`as`(DataDto::class.java)
+
+        RestAssured.given()
+            .`when`()
+            .get("type/typeDef")
+            .then()
+            .statusCode(200)
+            .body(
+                CoreMatchers.containsString("\"id\":\"${body.id}\""),
+                CoreMatchers.containsString(map1String)
+            )
     }
 }

@@ -65,7 +65,7 @@ class DataServiceGrpcImplTest {
             )
             Mockito.`when`(query.list()).thenReturn(
                 Uni.createFrom().item(
-                    listOf(DataDto(hexString, map1))
+                    listOf(DataDto(hexString, "typeDef" ,map1))
                 )
             )
 

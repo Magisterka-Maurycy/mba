@@ -67,6 +67,7 @@ class DataResource(
                 throw FailedToFindByIdException(id = aId)
             }
             it.data = aData.data
+            it.type = aData.type
             return@chain dataRepository.update(it)
         }
 
@@ -84,7 +85,20 @@ class DataResource(
                 }
                 return@map it
             }.awaitSuspending()
+    }
 
+    @GET
+    @Path("type/{type}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("user", "admin")
+    suspend fun getByType(@PathParam("type") aType: String): List<DataDto> {
+        return dataRepository.findByType(aType).map {
+            if (it == null) {
+                throw FailedToFindByIdException(aType)
+            }
+            return@map it
+        }.awaitSuspending()
     }
 
 
