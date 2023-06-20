@@ -1,6 +1,5 @@
 package org.maurycy.framework.mba.resource
 
-import com.mongodb.MongoWriteException
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.replaceWithUnit
@@ -16,7 +15,6 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import org.jboss.resteasy.reactive.ResponseStatus
 import org.maurycy.framework.mba.exception.FailedToFindByIdException
-import org.maurycy.framework.mba.exception.FailedToPersistDataException
 import org.maurycy.framework.mba.model.DataDto
 import org.maurycy.framework.mba.model.DataInput
 import org.maurycy.framework.mba.repository.DataRepository
@@ -40,12 +38,7 @@ class DataResource(
     @ResponseStatus(201)
     @RolesAllowed("user", "admin")
     fun addData(aData: DataDto): Uni<DataDto> {
-        try {
             return dataRepository.persist(aData)
-// TODO: think about removing catching from this function move it to exception mapper?
-        }catch (aE: MongoWriteException){
-            throw FailedToPersistDataException()
-        }
     }
 
     @DELETE
@@ -100,6 +93,5 @@ class DataResource(
             return@map it
         }.awaitSuspending()
     }
-
 
 }
