@@ -1,7 +1,6 @@
 package org.maurycy.framework.mba
 
 import com.github.javafaker.Faker
-import io.quarkus.test.TestTransaction
 import io.quarkus.test.common.http.TestHTTPEndpoint
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.security.TestSecurity
@@ -25,7 +24,6 @@ class DataResourceTest {
     private val map2String = "\"data\":{\"4\":\"d\",\"5\":\"e\",\"6\":\"f\"}"
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun getAllTest() {
         RestAssured.given()
@@ -36,7 +34,6 @@ class DataResourceTest {
     }
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun getByIdFailedToBuildObjectIdTest() {
         RestAssured.given()
@@ -47,7 +44,6 @@ class DataResourceTest {
     }
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun getByIdFailedToFindObjectIdTest() {
         val id = faker.name().name()
@@ -60,7 +56,6 @@ class DataResourceTest {
     }
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun addDataTest() {
         val id = faker.name().name()
@@ -87,7 +82,6 @@ class DataResourceTest {
     }
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun deleteDataTest() {
         val id = faker.name().name()
@@ -113,7 +107,6 @@ class DataResourceTest {
     }
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun putDataTest() {
         val id = faker.name().name()
@@ -142,7 +135,6 @@ class DataResourceTest {
     }
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun putDataFailedToBuildObjectIdTest() {
         val id = faker.name().name()
@@ -156,7 +148,6 @@ class DataResourceTest {
     }
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun putDataFailedToFindObjectIdTest() {
         val id = faker.name().name()
@@ -171,7 +162,6 @@ class DataResourceTest {
     }
 
     @Test
-    @TestTransaction
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun getByTypeTest() {
         val id = faker.name().name()
@@ -195,5 +185,21 @@ class DataResourceTest {
                 CoreMatchers.containsString("\"id\":\"${body.id}\""),
                 CoreMatchers.containsString(map1String)
             )
+        RestAssured.given()
+            .`when`()
+            .delete("/${body.id}")
+            .then()
+            .statusCode(204)
+            .body(CoreMatchers.`is`(""))
+    }
+    @Test
+    @TestSecurity(user = "testUser", roles = ["admin", "user"])
+    fun getByTypeTestFail() {
+        RestAssured.given()
+            .`when`()
+            .get("type/typeDef")
+            .then()
+//            .body(CoreMatchers.`is`(""))
+//            .statusCode(204)
     }
 }

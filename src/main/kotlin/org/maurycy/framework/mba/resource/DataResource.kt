@@ -15,6 +15,7 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import org.jboss.resteasy.reactive.ResponseStatus
 import org.maurycy.framework.mba.exception.FailedToFindByIdException
+import org.maurycy.framework.mba.exception.FailedToFindByTypeException
 import org.maurycy.framework.mba.model.DataDto
 import org.maurycy.framework.mba.model.DataInput
 import org.maurycy.framework.mba.repository.DataRepository
@@ -23,7 +24,6 @@ import org.maurycy.framework.mba.repository.DataRepository
 class DataResource(
     private val dataRepository: DataRepository,
 ) {
-
 
 
     @GET
@@ -38,7 +38,7 @@ class DataResource(
     @ResponseStatus(201)
     @RolesAllowed("user", "admin")
     fun addData(aData: DataDto): Uni<DataDto> {
-            return dataRepository.persist(aData)
+        return dataRepository.persist(aData)
     }
 
     @DELETE
@@ -55,13 +55,13 @@ class DataResource(
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("user", "admin")
     fun putData(@PathParam("id") aId: String, aData: DataInput): Uni<DataDto> {
-        return dataRepository.findById(aId).chain { it ->
-            if (it == null) {
+        return dataRepository.findById(aId).chain { dataToUpdate ->
+            if (dataToUpdate == null) {
                 throw FailedToFindByIdException(id = aId)
             }
-            it.data = aData.data
-            it.type = aData.type
-            return@chain dataRepository.update(it)
+            dataToUpdate.data = aData.data
+            dataToUpdate.type = aData.type
+            return@chain dataRepository.update(dataToUpdate)
         }
 
     }
@@ -72,12 +72,12 @@ class DataResource(
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("user", "admin")
     suspend fun getById(@PathParam("id") aId: String): DataDto {
-            return dataRepository.findById(aId).map {
-                if (it == null) {
-                    throw FailedToFindByIdException(aId)
-                }
-                return@map it
-            }.awaitSuspending()
+        return dataRepository.findById(aId).map {
+            if (it == null) {
+                throw FailedToFindByIdException(aId)
+            }
+            return@map it
+        }.awaitSuspending()
     }
 
     @GET
@@ -86,12 +86,11 @@ class DataResource(
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("user", "admin")
     suspend fun getByType(@PathParam("type") aType: String): List<DataDto> {
-        return dataRepository.findByType(aType).map {
-            if (it == null) {
-                throw FailedToFindByIdException(aType)
-            }
-            return@map it
-        }.awaitSuspending()
+        val result = dataRepository.findByType(aType).awaitSuspending()
+        if (result.isEmpty()) {
+            throw FailedToFindByTypeException(aType)
+        }
+        return result
     }
 
 }
