@@ -192,6 +192,7 @@ class DataResourceTest {
             .statusCode(204)
             .body(CoreMatchers.`is`(""))
     }
+
     @Test
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun getByTypeTestFail() {

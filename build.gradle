@@ -25,7 +25,7 @@ dependencies {
     implementation("io.quarkus:quarkus-mutiny")
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
     implementation("io.quarkus:quarkus-smallrye-fault-tolerance")
-    implementation ("io.quarkus:quarkus-micrometer-registry-prometheus")
+    implementation("io.quarkus:quarkus-micrometer-registry-prometheus")
     implementation("io.quarkus:quarkus-smallrye-health")
     implementation("io.quarkus:quarkus-mongodb-panache-kotlin")
     implementation("io.quarkus:quarkus-openshift")
@@ -62,7 +62,7 @@ test {
         destinationFile = layout.buildDirectory.file("jacoco-quarkus.exec").get().asFile
     }
     jacocoTestReport.enabled = false
-    reports{
+    reports {
         junitXml.required.set(true)
     }
 }
@@ -90,8 +90,8 @@ compileTestKotlin {
 
 sonar {
     properties {
-        property("sonar.projectKey","mba")
-        property("sonar.coverage.jacoco.xmlReportPaths","build/jacoco-report/jacoco.xml")
+        property("sonar.projectKey", "mba")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/jacoco-report/jacoco.xml")
     }
 }
 
