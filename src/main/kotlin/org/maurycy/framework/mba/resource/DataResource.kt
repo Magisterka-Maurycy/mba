@@ -59,7 +59,7 @@ class DataResource(
             if (dataToUpdate == null) {
                 throw FailedToFindByIdException(id = aId)
             }
-            dataToUpdate.data = aData.data
+            dataToUpdate.storedData = aData.data
             dataToUpdate.type = aData.type
             return@chain dataRepository.update(dataToUpdate)
         }

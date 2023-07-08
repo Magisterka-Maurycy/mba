@@ -10,5 +10,5 @@ data class DataDto(
     @BsonId
     var id: String? = null,
     var type: String? = null,
-    var data: Map<String, String>? = null,
+    var storedData: Map<String, String>? = null,
 ) : PanacheMongoEntityBase()
