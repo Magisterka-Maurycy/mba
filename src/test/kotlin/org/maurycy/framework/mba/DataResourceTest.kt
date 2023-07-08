@@ -19,9 +19,9 @@ import org.maurycy.framework.mba.resource.DataResource
 class DataResourceTest {
     var faker = Faker()
     private val map1 = mapOf(Pair("1", "a"), Pair("2", "b"), Pair("3", "c"))
-    private val map1String = "\"data\":{\"1\":\"a\",\"2\":\"b\",\"3\":\"c\"}"
+    private val map1String = "\"dataStorage\":{\"1\":\"a\",\"2\":\"b\",\"3\":\"c\"}"
     private val map2 = mapOf(Pair("4", "d"), Pair("5", "e"), Pair("6", "f"))
-    private val map2String = "\"data\":{\"4\":\"d\",\"5\":\"e\",\"6\":\"f\"}"
+    private val map2String = "\"dataStorage\":{\"4\":\"d\",\"5\":\"e\",\"6\":\"f\"}"
 
     @Test
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
@@ -61,7 +61,7 @@ class DataResourceTest {
         val id = faker.name().name()
         val body = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, "typeDef", map1))
+            .body(DataDto(id, "typeDef", map1))
             .`when`().post()
             .then()
             .statusCode(201)
@@ -87,7 +87,7 @@ class DataResourceTest {
         val id = faker.name().name()
         val body = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, "typeDef", map1))
+            .body(DataDto(id, "typeDef", map1))
             .`when`().post()
             .then()
             .statusCode(201)
@@ -112,7 +112,7 @@ class DataResourceTest {
         val id = faker.name().name()
         val body = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, "typeDef", map1))
+            .body(DataDto(id, "typeDef", map1))
             .`when`().post()
             .then()
             .statusCode(201)
@@ -167,7 +167,7 @@ class DataResourceTest {
         val id = faker.name().name()
         val body = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, "typeDef", map1))
+            .body(DataDto(id, "typeDef", map1))
             .`when`().post()
             .then()
             .statusCode(201)
