@@ -10,7 +10,7 @@ import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.maurycy.framework.mba.model.DataDto
-import org.maurycy.framework.mba.model.DataInput
+import org.maurycy.framework.mba.model.DataUpdate
 import org.maurycy.framework.mba.resource.DataResource
 
 
@@ -123,7 +123,7 @@ class DataResourceTest {
 
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, "typeDef", map2))
+            .body(DataUpdate("typeDef", map2))
             .`when`()
             .put("/${body.id}")
             .then()
@@ -137,10 +137,9 @@ class DataResourceTest {
     @Test
     @TestSecurity(user = "testUser", roles = ["admin", "user"])
     fun putDataFailedToBuildObjectIdTest() {
-        val id = faker.name().name()
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, "typeDef", map2))
+            .body(DataUpdate("typeDef", map2))
             .`when`()
             .put("/aaa")
             .then()
@@ -153,7 +152,7 @@ class DataResourceTest {
         val id = faker.name().name()
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(DataInput(id, "typeDef", map2))
+            .body(DataUpdate("typeDef", map2))
             .`when`()
             .put("/$id")
             .then()

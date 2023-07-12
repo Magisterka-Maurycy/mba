@@ -17,7 +17,7 @@ import org.jboss.resteasy.reactive.ResponseStatus
 import org.maurycy.framework.mba.exception.FailedToFindByIdException
 import org.maurycy.framework.mba.exception.FailedToFindByTypeException
 import org.maurycy.framework.mba.model.DataDto
-import org.maurycy.framework.mba.model.DataInput
+import org.maurycy.framework.mba.model.DataUpdate
 import org.maurycy.framework.mba.repository.DataRepository
 
 @Path("/data")
@@ -54,12 +54,12 @@ class DataResource(
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("user", "admin")
-    fun putData(@PathParam("id") aId: String, aData: DataInput): Uni<DataDto> {
+    fun putData(@PathParam("id") aId: String, aData: DataUpdate): Uni<DataDto> {
         return dataRepository.findById(aId).chain { dataToUpdate ->
             if (dataToUpdate == null) {
                 throw FailedToFindByIdException(id = aId)
             }
-            dataToUpdate.dataStorage = aData.data
+            dataToUpdate.dataStorage = aData.dataStorage
             dataToUpdate.type = aData.type
             return@chain dataRepository.update(dataToUpdate)
         }
