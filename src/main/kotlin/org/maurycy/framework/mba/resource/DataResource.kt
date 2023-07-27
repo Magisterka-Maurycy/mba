@@ -2,7 +2,6 @@ package org.maurycy.framework.mba.resource
 
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.awaitSuspending
-import io.smallrye.mutiny.replaceWithUnit
 import jakarta.annotation.security.RolesAllowed
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
@@ -18,6 +17,7 @@ import org.maurycy.framework.mba.exception.FailedToFindByIdException
 import org.maurycy.framework.mba.exception.FailedToFindByTypeException
 import org.maurycy.framework.mba.model.DataDto
 import org.maurycy.framework.mba.model.DataUpdate
+import org.maurycy.framework.mba.model.OperationDto
 import org.maurycy.framework.mba.repository.DataRepository
 
 @Path("/data")
@@ -45,8 +45,10 @@ class DataResource(
     @Path("{id}")
     @ResponseStatus(204)
     @RolesAllowed("user", "admin")
-    fun deleteData(@PathParam("id") aId: String): Uni<Unit> {
-        return dataRepository.deleteById(aId).replaceWithUnit()
+    @Produces(MediaType.APPLICATION_JSON)
+    suspend fun deleteData(@PathParam("id") aId: String): OperationDto {
+        val result = dataRepository.deleteById(aId).awaitSuspending()
+        return OperationDto(result)
     }
 
     @PUT
