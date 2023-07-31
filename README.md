@@ -46,17 +46,3 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./build/mba-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling.
-
-## Related Guides
-
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI
-- Kotlin ([guide](https://quarkus.io/guides/kotlin)): Write your services in Kotlin
-- MongoDB with Panache for Kotlin ([guide](https://quarkus.io/guides/mongodb-panache-kotlin)): Simplify your persistence code for MongoDB in Kotlin via the active record or the repository pattern
-
-## Provided Code
-
-### RESTEasy Reactive
-
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
